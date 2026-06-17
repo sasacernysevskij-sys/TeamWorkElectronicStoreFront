@@ -1,0 +1,132 @@
+.news-section {
+  width: 100%;
+  background: #fff;
+  padding: 60px 0;
+  box-sizing: border-box;
+}
+
+.news-section-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.news-block h2, .reviews-block h2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.news-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.news-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.news-date {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.news-image-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 3; 
+  overflow: hidden;
+  border-bottom: 3px solid #111;
+  background: #f5f5f5;
+}
+
+.news-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  transition: transform 0.3s;
+}
+
+.news-card:hover .news-image-wrap img {
+  transform: scale(1.03);
+}
+
+.news-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.news-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  margin: 12px 0 6px 0;
+  text-transform: uppercase;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 36px; 
+}
+
+.news-desc {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 50px;
+}
+
+.news-more {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #f5c518;
+  color: #111;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 0 2px 0;
+  cursor: pointer;
+  align-self: flex-start;
+  text-transform: uppercase;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.news-more:hover {
+  color: #f5c518;
+  border-color: #111;
+}
+
+@media (max-width: 900px) {
+  .news-section-inner {
+    grid-template-columns: 1fr; 
+    gap: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-list {
+    grid-template-columns: 1fr; 
+  }
+}

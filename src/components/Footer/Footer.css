@@ -1,0 +1,237 @@
+.footer {
+  background: #111;
+  color: #ccc;
+  margin-top: 60px;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.footer-store {
+  background: #f5c518;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-store h3 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+  line-height: 1.4;
+}
+
+.footer-store-icon {
+  font-size: 60px;
+  line-height: 1;
+}
+
+.footer-store-btn {
+  display: inline-block;
+  border: 2px solid #111;
+  color: #111;
+  padding: 12px 24px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-decoration: none;
+  background: transparent;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.footer-store-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.footer-newsletter {
+  background: #1a1a1a;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-newsletter h3 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.5;
+}
+
+.newsletter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.newsletter-field label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.newsletter-field input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #444;
+  padding: 8px 0;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+  outline: none;
+}
+
+.newsletter-field input::placeholder {
+  color: #555;
+}
+
+.newsletter-field input:focus {
+  border-bottom-color: #f5c518;
+}
+
+.newsletter-btn {
+  border: 2px solid #fff;
+  background: transparent;
+  color: #fff;
+  padding: 12px 24px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.2s, color 0.2s;
+}
+
+.newsletter-btn:hover {
+  background: #fff;
+  color: #111;
+}
+
+.footer-links {
+  padding: 40px 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.footer-col h4 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.footer-col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-col ul li a {
+  color: #888;
+  font-size: 13px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-col ul li a:hover {
+  color: #f5c518;
+}
+
+.footer-contacts p {
+  font-size: 15px;
+  color: #fff;
+  font-weight: 500;
+  line-height: 2;
+}
+
+.footer-contacts .email {
+  color: #f5c518;
+  font-size: 13px;
+}
+
+.footer-contacts .address {
+  font-size: 13px;
+  color: #888;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.footer-social-link {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+  font-weight: 700;
+}
+
+.footer-social-link:hover {
+  background: #f5c518;
+  color: #111;
+}
+
+.footer-bottom {
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #555;
+}
+
+@media (max-width: 900px) {
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-links {
+    grid-template-columns: 1fr 1fr;
+    padding: 30px 20px;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-store,
+  .footer-newsletter {
+    padding: 28px 20px;
+  }
+
+  .footer-links {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    padding: 16px 20px;
+  }
+}

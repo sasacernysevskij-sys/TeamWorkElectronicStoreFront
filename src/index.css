@@ -1,0 +1,26 @@
+:root {
+  --yellow: #f5c518;
+  --yellow-hover: #e0b000;
+  --dark: #1a1a1a;
+  --dark2: #222;
+  --dark3: #2d2d2d;
+  --gray: #888;
+  --light-gray: #f4f4f4;
+  --white: #fff;
+  --green: #4caf50;
+  --red: #e53935;
+  --border: #333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #fff;
+  color: #222;
+  overflow-x: hidden;
+}
