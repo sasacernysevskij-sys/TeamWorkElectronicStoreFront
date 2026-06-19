@@ -64,7 +64,7 @@ const AuthModal = ({ open, mode, onClose, onSwitchMode, onSuccess }: AuthModalPr
       const res = await fetch(`${BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, password, phone }),
+        body: JSON.stringify({ name: firstName, surname: lastName, email, password, phone }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Помилка реєстрації');

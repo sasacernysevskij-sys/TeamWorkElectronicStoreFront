@@ -8,9 +8,9 @@ interface Product {
   id: number;
   name: string;
   price: number;
-  image?: string;
+  image_url?: string;
   sizes?: string[];
-  category?: string;
+  product_type?: string;
 }
 
 const NewProducts = () => {

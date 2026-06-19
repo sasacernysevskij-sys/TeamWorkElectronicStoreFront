@@ -6,11 +6,10 @@ interface Product {
   id: number;
   name: string;
   price: number;
-  image?: string;
+  image_url?: string;
   sizes?: string[];
-  category?: string;
+  product_type?: string;
 }
-
 interface ProductCardProps {
   product: Product;
 }
@@ -25,8 +24,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <div className="product-card">
       <div className="product-image-wrap">
-        {product.image ? (
-          <img src={product.image} alt={product.name} className="product-image" />
+        {product.image_url ? (
+          <img src={product.image_url} alt={product.name} className="product-image" />
         ) : (
           <div className="product-image-placeholder"></div>
         )}
