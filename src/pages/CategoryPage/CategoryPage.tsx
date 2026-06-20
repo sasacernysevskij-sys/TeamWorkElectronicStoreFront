@@ -121,7 +121,7 @@ const CategoryPage = ({ category, title }: CategoryPageProps) => {
     <div className="category-page">
       {/* Hero */}
       <div className="category-hero">
-        <div className="category-hero-bg" style={{ background: 'linear-gradient(135deg, #1a1a1a, #2d2d2d)' }} />
+        <div className="category-hero-bg" style={{ backgroundImage: 'url(https://www.mtac.ua/themes/shop/store/build/assets/breadcrumbs-back-b7c8e5d7.jpg)' }} />
         <div className="category-hero-content">
           <h1 className="category-hero-title">{title}</h1>
           <div className="breadcrumb">
