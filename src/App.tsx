@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage/HomePage';
 import CategoryPage from './pages/CategoryPage/CategoryPage';
 import AdminPage from './pages/AdminPage/AdminPage';
 import AuthModal from './components/AuthModal/AuthModal';
+import CartPage from './pages/CartPage/CartPage';
 import { useState } from 'react';
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
             <Route path="/taktychne" element={<CategoryPage category="taktychne" title="ТАКТИЧНЕ СПОРЯДЖЕННЯ" />} />
             <Route path="/novynky" element={<CategoryPage category="novynky" title="НОВИНКИ" />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/cart" element={<CartPage />} />
           </Routes>
         </main>
         <Footer />

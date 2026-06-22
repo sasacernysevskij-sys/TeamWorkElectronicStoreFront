@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -17,6 +17,7 @@ interface HeaderProps {
 
 const Header = ({ onLoginClick, onRegisterClick, user, onLogout }: HeaderProps) => {
   const [searchVal, setSearchVal] = useState('');
+  const [cartCount, setCartCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -26,6 +27,24 @@ const Header = ({ onLoginClick, onRegisterClick, user, onLogout }: HeaderProps) 
       navigate(`${location.pathname}?q=${encodeURIComponent(searchVal)}`);
     }
   };
+
+  const fetchCartCount = () => {
+    const token = localStorage.getItem('token');
+    if (!token || !user) return;
+
+    fetch('http://localhost:8000/api/cart', {
+      headers: { 'Authorization': `Bearer ${token}` },
+    })
+      .then(res => res.json())
+      .then(data => setCartCount(data.items?.length || 0))
+      .catch(() => {});
+  };
+
+  useEffect(() => {
+    fetchCartCount();
+    window.addEventListener('cartUpdated', fetchCartCount);
+    return () => window.removeEventListener('cartUpdated', fetchCartCount);
+  }, [user]);
 
   return (
     <header className="header-wrapper">
@@ -94,10 +113,10 @@ const Header = ({ onLoginClick, onRegisterClick, user, onLogout }: HeaderProps) 
           <button className="header-icon-btn">
             <BalanceIcon />
           </button>
-          <button className="header-icon-btn">
+          <Link to="/cart" className="header-icon-btn">
             <ShoppingCartOutlinedIcon />
-            <span className="cart-badge">0</span>
-          </button>
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </Link>
           <button className="header-icon-btn mobile-menu-btn">
             <MenuIcon />
           </button>
@@ -107,7 +126,7 @@ const Header = ({ onLoginClick, onRegisterClick, user, onLogout }: HeaderProps) 
       <nav className="header-nav">
         <ul>
           <li><Link to="/novynky">НОВИНКИ</Link></li>
-          <li><Link to="/sporyadzhennya-ta-ekipirovka">СПОРЯДЖЕННЯ ТА ЕКІПІРОВКА</Link></li>
+          <li><Link to="/sporyadzhennya-ta-ekipirovka">СПОРЯДЖЕННЯ ТА ЕКІПРОВКА</Link></li>
           <li><Link to="/vzuttya">ВЗУТТЯ</Link></li>
           <li><Link to="/odyag">ОДЯГ</Link></li>
           <li><Link to="/taktychne">ТАКТИЧНЕ СПОРЯДЖЕННЯ</Link></li>
