@@ -4,11 +4,12 @@
   height: 580px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
+  justify-content: center;
+  padding: 0 20px;
   box-sizing: border-box;
   color: #fff;
   overflow: hidden;
+  transition: background-image 0.6s ease-in-out;
 }
 
 .hero-slider::before {
@@ -26,8 +27,20 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px; 
+  gap: 16px;
   margin-left: 60px;
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .slide-subtitle {
@@ -74,12 +87,15 @@
   background: #fff;
 }
 
-.slider-btn {
-  position: relative;
-  z-index: 2;
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+.slider-left {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  background: rgba(245, 197, 24, 0.15);
+  color: rgba(245, 197, 24, 0.7);
+  border: 1px solid rgba(245, 197, 24, 0.3);
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -91,13 +107,33 @@
   transition: all 0.2s;
 }
 
-.slider-btn:hover {
-  background: #f5c518;
+.slider-right {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  background: rgba(245, 197, 24, 0.15);
+  color: rgba(245, 197, 24, 0.7);
+  border: 1px solid rgba(245, 197, 24, 0.3);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.slider-left:hover,
+.slider-right:hover {
+  background: rgba(245, 197, 24, 0.5);
   color: #111;
   border-color: #f5c518;
 }
 
-/* Крапки знизу */
 .slider-dots {
   position: absolute;
   bottom: 24px;
@@ -125,8 +161,9 @@
 }
 
 @media (max-width: 768px) {
-  .hero-slider { height: 400px; padding: 0 20px; }
-  .slide-content { margin-left: 10px; }
-  .slide-title { font-size: 32px; }
-  .slider-btn { display: none; } 
+  .hero-slider { height: 400px; padding: 0 10px; }
+  .slide-content { margin-left: 20px; }
+  .slide-title { font-size: 28px; }
+  .slider-left,
+  .slider-right { width: 36px; height: 36px; font-size: 18px; }
 }

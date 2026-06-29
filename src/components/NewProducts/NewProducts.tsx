@@ -24,8 +24,7 @@ const NewProducts = () => {
   const totalPages = Math.ceil(total / LIMIT);
 
   useEffect(() => {
-    const skip = (page - 1) * LIMIT;
-    fetch(`${BASE_URL}/api/products?skip=${skip}&limit=${LIMIT}`)
+    fetch(`${BASE_URL}/api/products?is_new=true&limit=8`)
       .then((res) => {
         if (!res.ok) throw new Error('Не вдалося завантажити товари');
         return res.json();

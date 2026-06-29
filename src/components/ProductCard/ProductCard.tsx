@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BalanceIcon from '@mui/icons-material/Balance';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import './ProductCard.css';
 
 interface Product {
@@ -21,6 +22,67 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const sizes = product.sizes || [];
   const [showDescription, setShowDescription] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favLoading, setFavLoading] = useState(false);
+  const [isCompared, setIsCompared] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('compare');
+    const list: number[] = stored ? JSON.parse(stored) : [];
+    setIsCompared(list.includes(product.id));
+  }, [product.id]);
+
+  useEffect(() => {
+    const handleCompareUpdate = () => {
+      const stored = localStorage.getItem('compare');
+      const list: number[] = stored ? JSON.parse(stored) : [];
+      setIsCompared(list.includes(product.id));
+    };
+    window.addEventListener('compareUpdated', handleCompareUpdate);
+    return () => window.removeEventListener('compareUpdated', handleCompareUpdate);
+  }, [product.id]);
+
+  const handleFavoriteClick = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Потрібно увійти в акаунт');
+      return;
+    }
+
+    setFavLoading(true);
+
+    try {
+      if (isFavorite) {
+        await fetch(`http://localhost:8000/api/favorites/${product.id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        setIsFavorite(false);
+      } else {
+        const res = await fetch('http://localhost:8000/api/favorites', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ product_id: product.id }),
+        });
+
+        if (res.ok) {
+          setIsFavorite(true);
+        } else {
+          const err = await res.json();
+          if (res.status !== 400) {
+            alert(err.detail || 'Помилка');
+          }
+        }
+      }
+    } catch (err: any) {
+      alert(err.message || 'Помилка сервера');
+    } finally {
+      setFavLoading(false);
+    }
+  };
 
   const handleBuy = async () => {
     const token = localStorage.getItem('token');
@@ -52,6 +114,24 @@ const ProductCard = ({ product }: ProductCardProps) => {
     } catch (err: any) {
       alert(err.message || 'Помилка сервера');
     }
+  };const handleCompareClick = () => {
+    const stored = localStorage.getItem('compare');
+    let compareList: number[] = stored ? JSON.parse(stored) : [];
+
+    if (compareList.includes(product.id)) {
+      compareList = compareList.filter(id => id !== product.id);
+      setIsCompared(false);
+    } else {
+      if (compareList.length >= 4) {
+        alert('Можно сравнивать не более 4 товаров');
+        return;
+      }
+      compareList.push(product.id);
+      setIsCompared(true);
+    }
+
+    localStorage.setItem('compare', JSON.stringify(compareList));
+    window.dispatchEvent(new Event('compareUpdated'));
   };
 
   return (
@@ -64,7 +144,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <div className="product-image-placeholder"></div>
           )}
 
-          {/* ⭐ Рейтинг слева сверху */}
           {product.rating != null && (
             <div style={{
               position: 'absolute',
@@ -86,11 +165,23 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
 
           <div className="product-actions-overlay">
-            <button className="product-action-btn">
+            <button
+              className="product-action-btn"
+              onClick={handleCompareClick}
+              style={{
+                borderColor: isCompared ? '#5b35e5' : undefined,
+                color: isCompared ? '#4c35e5' : undefined
+              }}
+            >
               <BalanceIcon fontSize="small" />
             </button>
-            <button className="product-action-btn fav">
-              <FavoriteBorderIcon fontSize="small" />
+            <button
+              className="product-action-btn fav"
+              onClick={handleFavoriteClick}
+              disabled={favLoading}
+              style={{ color: isFavorite ? '#e53935' : undefined, borderColor: isFavorite ? '#e53935' : undefined }}
+            >
+              {isFavorite ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
             </button>
           </div>
         </div>
@@ -109,7 +200,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
           <button className="product-buy-btn" onClick={handleBuy}>КУПИТИ</button>
 
-          {/* Кнопка описания */}
           {product.description && (
             <button
               onClick={() => setShowDescription(true)}
@@ -139,7 +229,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       </div>
 
-      {/* Модальное окно описания */}
       {showDescription && (
         <div
           style={{

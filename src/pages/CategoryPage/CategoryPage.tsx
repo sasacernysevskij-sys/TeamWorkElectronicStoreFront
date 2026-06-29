@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import type { Product } from '../../components/ProductCard/ProductCard';
 import './CategoryPage.css';
@@ -14,7 +14,7 @@ interface CategoryPageProps {
 interface TypeItem {
   icon: string;
   label: string;
-  productType: string | null; // какой product_type в базе, null = показать всё
+  productType: string | null;
 }
 
 // Какие product_type из базы относятся к какой категории (верхний уровень)
@@ -25,6 +25,12 @@ const productTypeMap: Record<string, string[]> = {
   taktychne: [],
   novynky: [],
 };
+
+// Маппинг subtype из URL в product_type базы
+const subtypeMap: Record<string, string> = {
+  patches: 'Patches, badges snd cockades',
+};
+
 // Иконки подкатегорий с привязкой к product_type
 const categoryTypes: Record<string, TypeItem[]> = {
   sporyadzhennya: [
@@ -43,7 +49,7 @@ const categoryTypes: Record<string, TypeItem[]> = {
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/221d3116818211ef8117aab9975c17d0/26c0b336aac257330b0e89c74ac349ee.png', label: 'Браслети з паракорду', productType: null },
   ],
   vzuttya: [
-    { icon: 'https://www.mtac.ua/storage/category/el_catalog/b9eed66320b511ef8115aab9975c17d0/86d079c474d1b453778126e311354b1c%20(1).png', label: 'Аксесуари для взуття', productType: null },
+    { icon: 'https://www.mtac.ua/storage/category/el_catalog/b9eed66320b511ef8115aab9975c17d0/86d079c474d1b453778126e311354b1c%20(1).png', label: 'Аксесуари для взуття', productType: "shoeAccessory" },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/beb5ce5420b011ef8115aab9975c17d0/fcbfa3e2e381a8ba19d9c72c2238d1ef.png', label: 'Взуття', productType: 'shoes' },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/abeaa22520b511ef8115aab9975c17d0/b05591ff5877c906ad4164778594716f.png', label: 'Гамаші', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/8ca6eb6120b511ef8115aab9975c17d0/a46594600cf312c80b96c65570748703.png', label: 'Устілки', productType: null },
@@ -53,7 +59,7 @@ const categoryTypes: Record<string, TypeItem[]> = {
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/f52fb1b020d311ef8115aab9975c17d0/cdf0cf88aef262ebd3fb344f0d61768b.png', label: 'Штани', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/c6e3fa5c3c5f11ef8115aab9975c17d0/714466358966263d4163c52d9200d0ad%20(1).png', label: 'Футболки, майки, пончо', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/5bc43953421911ef8115aab9975c17d0/a7234bf89a93fb92d0279403f7609994.png', label: 'Рукавиці', productType: null },
-    { icon: 'https://www.mtac.ua/storage/category/el_catalog/7ef3b18b421911ef8115aab9975c17d0/5e58a3a002781a73d88bb8d22681d72b.png', label: 'Шорти', productType: null },
+    { icon: 'https://www.mtac.ua/storage/category/el_catalog/7ef3b18b421911ef8115aab9975c17d0/5e58a3a002781a73d88bb8d22681d72b.png', label: 'Шорти', productType: "shorts"},
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/a3c467c6421911ef8115aab9975c17d0/4e5e057e5e6d25e04b2b60315bf28563.png', label: 'Куртки', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/b9077752421911ef8115aab9975c17d0/206b5ed25ffa6a91babae6d1de800df6.png', label: 'Флісові кофти', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/c76b0922421911ef8115aab9975c17d0/1e1d1d3fa23b78236238a97f46437a1e.png', label: 'Толстовки', productType: null },
@@ -61,14 +67,14 @@ const categoryTypes: Record<string, TypeItem[]> = {
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/e841af5c421911ef8115aab9975c17d0/9778a3e1536e8b918533abc5e706e672.png', label: 'Термобілизна', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/f26f951b421911ef8115aab9975c17d0/ab187313d2f5b472abafd345dce1da40.png', label: 'Головні убори', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/05872d7c421a11ef8115aab9975c17d0/16fd8248d8c90de82a09547a1267748c.png', label: 'Шарфи, шемаги', productType: null },
-    { icon: 'https://www.mtac.ua/storage/category/16602b7b421a11ef8115aab9975c17d0/87cae4b47927fd29ed11950df8ae9e90.png', label: 'Шарф-труби', productType: null },
+    { icon: 'https://cdn-icons-png.flaticon.com/512/1387/1387037.png', label: 'Шарф-труби', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/25eb5f8a421a11ef8115aab9975c17d0/eeb2c5636a0213fd26a7aca0a7cc0fd6.png', label: 'Кофти', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/31d98022421a11ef8115aab9975c17d0/bb7ec47a63470b4466b415d756afdcba.png', label: 'Пончо', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/41de4d63421a11ef8115aab9975c17d0/914683a009e92bcb822d444f7f2e4b60.png', label: 'Жіночий одяг', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/5590dc7f421a11ef8115aab9975c17d0/2865378c0edb3dbc446fb987a149177d.png', label: 'Жилети', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/77ec1ef9421a11ef8115aab9975c17d0/15c0336996029dff473788631d7e1d40.png', label: 'Маскувальний одяг', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/caf7a2b0706c11ef8117aab9975c17d0/276d32863386f0aefe5a5310844b6333.png', label: 'Шкарпетки', productType: null },
-    { icon: 'https://www.mtac.ua/storage/category/el_catalog/00000000000000000000000000000000/390a08ff99300a995cf5be0e3ce9e43f.png', label: 'Засоби для ремонту', productType: null },
+    { icon: 'https://www.mtac.ua/storage/category/el_catalog/00000000000000000000000000000000/390a08ff99300a995cf5be0e3ce9e43f.png', label: 'Засоби для ремонту', productType: "repair" },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/00000000000000000000000000000000/8703a2396c73c3accc363b9e599b6806%20(1).png', label: 'Ремені, підтяжки', productType: null },
   ],
   taktychne: [
@@ -83,20 +89,30 @@ const categoryTypes: Record<string, TypeItem[]> = {
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/a8f9751c20bf11ef8115aab9975c17d0/99a28d6f045c0470a24bdce9fee18e03.png', label: 'Набедрені платформи', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/a632edca20d211ef8115aab9975c17d0/80cb90cff5e2fd44543d362a090bef30.png', label: 'Наколінники та налокітники', productType: null },
     { icon: 'https://www.mtac.ua/storage/category/el_catalog/4381be9320bf11ef8115aab9975c17d0/32a11ebdce8beb4989f90315bbbda472.png', label: 'Підсумки', productType: null },
-    { icon: 'https://www.mtac.ua/storage/category/el_catalog/20f92f8320bf11ef8115aab9975c17d0/f4efca98b2f9cf53c3a5bb45f5cd0f0c%20(1).png', label: 'Плитоноски (PLATE CARRIER) та Бронежилети', productType: null },
+    { icon: 'https://www.mtac.ua/storage/category/el_catalog/20f92f8320bf11ef8115aab9975c17d0/f4efca98b2f9cf53c3a5bb45f5cd0f0c%20(1).png', label: 'Плитоноски (PLATE CARRIER) та Бронежилети', productType: "bodyArmor" },
   ],
   novynky: [],
 };
+
 const CategoryPage = ({ category, title }: CategoryPageProps) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [priceMax, setPriceMax] = useState(21347);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [activeSubType, setActiveSubType] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<string>('popular');
   const limit = 9;
+
+  const [searchParams] = useSearchParams();
+  const subtypeFromUrl = searchParams.get('subtype');
+
+  // Применяем подкатегорию из URL при первой загрузке
+  useEffect(() => {
+    if (subtypeFromUrl && subtypeMap[subtypeFromUrl]) {
+      setActiveSubType(subtypeMap[subtypeFromUrl]);
+    }
+  }, [subtypeFromUrl]);
 
   const totalPages = Math.ceil(total / limit);
 
@@ -115,16 +131,14 @@ const CategoryPage = ({ category, title }: CategoryPageProps) => {
         const allProducts = data.products || [];
         const allowedTypes = productTypeMap[category];
 
-        // Фильтр по верхней категории
         let filtered = allowedTypes && allowedTypes.length > 0
           ? allProducts.filter((p: Product) => allowedTypes.includes(p.product_type || ''))
           : allProducts;
 
-        // Фильтр по подкатегории
         if (activeSubType) {
           filtered = filtered.filter((p: Product) => p.product_type === activeSubType);
         }
-        // Сортировка          ← ВОТ ЗДЕСЬ
+
         if (sortBy === 'popular') {
           filtered = [...filtered].sort((a, b) => (b.rating || 0) - (a.rating || 0));
         } else if (sortBy === 'price_asc') {
@@ -133,14 +147,6 @@ const CategoryPage = ({ category, title }: CategoryPageProps) => {
           filtered = [...filtered].sort((a, b) => b.price - a.price);
         }
 
-        // Сортировка
-        if (sortBy === 'price_asc') {
-          filtered = [...filtered].sort((a, b) => a.price - b.price);
-        } else if (sortBy === 'price_desc') {
-          filtered = [...filtered].sort((a, b) => b.price - a.price);
-        }
-
-        // Пагинация
         const start = (page - 1) * limit;
         const paged = filtered.slice(start, start + limit);
 
@@ -175,14 +181,12 @@ const CategoryPage = ({ category, title }: CategoryPageProps) => {
           <div className="filter-section">
             <div className="filter-label">ФІЛЬТРИ:</div>
           </div>
-
           <div className="filter-section">
             <div className="filter-title-row">
               <span className="filter-title">ЦІНА</span>
               <button className="filter-toggle">+</button>
             </div>
           </div>
-
           {['КОЛІР', 'РОЗМІР', 'СТИКЕРИ', 'МАТЕРІАЛ', 'МОДЕЛЬ', 'ГРУПА КРОВІ', 'ТИП КРІПЛЕННЯ', 'ТИП ЗАМКУ'].map((f) => (
             <div className="filter-section" key={f}>
               <div className="filter-title-row">
@@ -235,24 +239,9 @@ const CategoryPage = ({ category, title }: CategoryPageProps) => {
 
           <div className="sort-bar">
             <span className="sort-label">СОРТУВАТИ:</span>
-            <button
-              className={`sort-btn${sortBy === 'popular' ? ' active' : ''}`}
-              onClick={() => { setSortBy('popular'); setPage(1); }}
-            >
-              популярні
-            </button>
-            <button
-              className={`sort-btn${sortBy === 'price_asc' ? ' active' : ''}`}
-              onClick={() => { setSortBy('price_asc'); setPage(1); }}
-            >
-              по зростанню ціни
-            </button>
-            <button
-              className={`sort-btn${sortBy === 'price_desc' ? ' active' : ''}`}
-              onClick={() => { setSortBy('price_desc'); setPage(1); }}
-            >
-              по зменшенню ціни
-            </button>
+            <button className={`sort-btn${sortBy === 'popular' ? ' active' : ''}`} onClick={() => { setSortBy('popular'); setPage(1); }}>популярні</button>
+            <button className={`sort-btn${sortBy === 'price_asc' ? ' active' : ''}`} onClick={() => { setSortBy('price_asc'); setPage(1); }}>по зростанню ціни</button>
+            <button className={`sort-btn${sortBy === 'price_desc' ? ' active' : ''}`} onClick={() => { setSortBy('price_desc'); setPage(1); }}>по зменшенню ціни</button>
           </div>
 
           {loading && <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>Завантаження товарів...</div>}
@@ -269,7 +258,8 @@ const CategoryPage = ({ category, title }: CategoryPageProps) => {
           )}
 
           {totalPages > 1 && (
-            <div className="pagination">{Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <div className="pagination">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                 <button
                   key={p}
                   className={`page-btn${p === page ? ' active' : ''}`}

@@ -8,7 +8,7 @@ interface AuthModalProps {
   mode: 'login' | 'register';
   onClose: () => void;
   onSwitchMode: (mode: 'login' | 'register') => void;
-  onSuccess: (user: { name: string; token: string }) => void;
+  onSuccess: (user: { name: string; token: string; role?: string }) => void;
 }
 
 const AuthModal = ({ open, mode, onClose, onSwitchMode, onSuccess }: AuthModalProps) => {
@@ -20,13 +20,14 @@ const AuthModal = ({ open, mode, onClose, onSwitchMode, onSuccess }: AuthModalPr
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [forgotMode, setForgotMode] = useState(false);
 
   if (!open) return null;
 
   const resetFields = () => {
     setEmail(''); setPassword(''); setFirstName('');
     setLastName(''); setConfirmPassword(''); setPhone('');
-    setError(''); setSuccess('');
+    setError(''); setSuccess(''); setForgotMode(false);
   };
 
   const handleSwitch = (m: 'login' | 'register') => {
@@ -46,7 +47,11 @@ const AuthModal = ({ open, mode, onClose, onSwitchMode, onSuccess }: AuthModalPr
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Помилка авторизації');
-      onSuccess({ name: data.user?.name || data.user?.firstName || email, token: data.token });
+      onSuccess({ 
+        name: data.user?.name || data.user?.firstName || email, 
+        token: data.token,
+        role: data.user?.role 
+      });
       resetFields();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Помилка сервера');
@@ -74,6 +79,23 @@ const AuthModal = ({ open, mode, onClose, onSwitchMode, onSuccess }: AuthModalPr
       setError(err instanceof Error ? err.message : 'Помилка сервера');
     }
   };
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    if (!email) { setError('Введіть email'); return; }
+    try {
+      const res = await fetch(`${BASE_URL}/api/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error('Помилка');
+      setSuccess('Посилання для скидання пароля надіслано на пошту');
+      setTimeout(() => { resetFields(); onClose(); }, 2000);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Помилка сервера');
+    }
+  };
 
   return (
     <div className="auth-overlay" onClick={(e) => { if (e.target === e.currentTarget) { onClose(); resetFields(); } }}>
@@ -81,13 +103,29 @@ const AuthModal = ({ open, mode, onClose, onSwitchMode, onSuccess }: AuthModalPr
         <button className="auth-close" onClick={() => { onClose(); resetFields(); }}>×</button>
 
         <h2 className="auth-title">
-          {mode === 'login' ? 'АВТОРИЗАЦІЯ' : 'РЕЄСТРАЦІЯ'}
+          {forgotMode ? 'СКИДАННЯ ПАРОЛЯ' : mode === 'login' ? 'АВТОРИЗАЦІЯ' : 'РЕЄСТРАЦІЯ'}
         </h2>
 
         {error && <div className="auth-error">{error}</div>}
         {success && <div className="auth-success">{success}</div>}
 
-        {mode === 'login' ? (
+        {forgotMode ? (
+          <form onSubmit={handleForgotPassword}>
+            <div className="auth-field">
+              <label>Електронна пошта <span>*</span></label>
+              <input
+                type="email"
+                placeholder="Введіть email для відновлення"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <button type="submit" className="auth-submit-btn">ВІДНОВИТИ ПАРОЛЬ</button>
+            <div className="auth-switch">
+              <button type="button" onClick={() => setForgotMode(false)}>← Назад до входу</button>
+            </div>
+          </form>
+        ) : mode === 'login' ? (
           <form onSubmit={handleLogin}>
             <div className="auth-field">
               <label>Електронна пошта або номер телефону <span>*</span></label>
@@ -110,6 +148,9 @@ const AuthModal = ({ open, mode, onClose, onSwitchMode, onSuccess }: AuthModalPr
 
             <button type="submit" className="auth-submit-btn">ВІДПРАВИТИ</button>
 
+            <div className="auth-switch">
+              <button type="button" onClick={() => setForgotMode(true)}>Забули пароль?</button>
+            </div>
             <div className="auth-switch">
               Ще немає облікового запису?{' '}
               <button type="button" onClick={() => handleSwitch('register')}>Реєстрація</button>

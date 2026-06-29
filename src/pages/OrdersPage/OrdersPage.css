@@ -1,0 +1,96 @@
+.orders-page { min-height: 60vh; }
+
+.orders-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
+.orders-empty, .orders-loading, .orders-error, .orders-login-required {
+  text-align: center;
+  padding: 60px;
+  color: #888;
+  font-size: 16px;
+}
+
+.orders-empty a, .orders-login-required a {
+  color: #f5c518;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.orders-error { color: #e53935; }
+
+.orders-list { display: flex; flex-direction: column; gap: 12px; }
+
+.order-card {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  cursor: pointer;
+  background: #fafafa;
+  transition: background 0.2s;
+}
+
+.order-header:hover { background: #f0f0f0; }
+
+.order-id { font-weight: 700; margin-right: 16px; }
+.order-date { color: #888; font-size: 13px; }
+
+.order-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.order-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.status-new { background: #e3f2fd; color: #1565c0; }
+.status-processing { background: #fff3e0; color: #e65100; }
+.status-shipped { background: #e8f5e9; color: #2e7d32; }
+.status-delivered { background: #e8f5e9; color: #1b5e20; }
+.status-cancelled { background: #ffebee; color: #c62828; }
+
+.order-total { font-weight: 700; font-size: 16px; }
+.order-expand { color: #888; }
+
+.order-details {
+  padding: 16px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order-item {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.order-item-name { flex: 1; }
+.order-item-qty { color: #888; min-width: 60px; text-align: center; }
+.order-item-price { min-width: 80px; text-align: right; color: #888; }
+.order-item-subtotal { min-width: 80px; text-align: right; font-weight: 600; }
+
+@media (max-width: 600px) {
+  .order-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .order-header-right { width: 100%; justify-content: space-between; }
+  .order-item { flex-wrap: wrap; gap: 4px; }
+}

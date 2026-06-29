@@ -9,7 +9,7 @@ interface HomePageProps {
   onRegisterClick?: () => void;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ onRegisterClick }) => {
+const HomePage: React.FC<HomePageProps> = ({ onRegisterClick: _onRegisterClick }) => {
   return (
     <div className="home-page">
       <HeroSlider />

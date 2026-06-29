@@ -12,6 +12,7 @@ interface CartItem {
   quantity: number;
   subtotal: number;
   image_url?: string;
+  stock?: number;
 }
 
 const CartPage = () => {
@@ -67,6 +68,16 @@ const CartPage = () => {
       const err = await res.json();
       alert(err.detail || 'Помилка');
     }
+  };
+
+  const handleRemoveItem = async (productId: number) => {
+    await fetch(`${BASE_URL}/api/cart/items/${productId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    fetchCart();
+    window.dispatchEvent(new Event('cartUpdated'));
   };
 
   const handleClear = async () => {
@@ -160,8 +171,31 @@ const CartPage = () => {
                     >
                       +
                     </button>
+                    <span style={{ marginLeft: '12px', color: '#888', fontSize: '13px' }}>
+                      Макс: {item.stock ?? '?'}
+                    </span>
                   </div>
                 </div>
+                <button
+                  onClick={() => handleRemoveItem(item.product_id)}
+                  style={{
+                    background: 'none',
+                    border: '1px solid #e53935',
+                    color: '#e53935',
+                    width: '32px',
+                    height: '32px',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}
+                  title="Видалити з кошика"
+                >
+                  ×
+                </button>
                 <div className="cart-item-subtotal">{item.subtotal} ₴</div>
               </div>
             ))}

@@ -1,0 +1,79 @@
+.search-page {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  min-height: 60vh;
+}
+
+.search-page-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
+.search-page-empty {
+  text-align: center;
+  color: #888;
+  padding: 40px;
+  font-size: 14px;
+}
+
+.search-page-count {
+  color: #888;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.search-page-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.search-page-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 30px;
+}
+
+.search-page-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  color: #555;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.search-page-btn:hover {
+  background: #f5c518;
+  border-color: #f5c518;
+  color: #111;
+}
+
+.search-page-btn.active {
+  background: #f5c518;
+  border-color: #f5c518;
+  color: #111;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .search-page-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .search-page-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}

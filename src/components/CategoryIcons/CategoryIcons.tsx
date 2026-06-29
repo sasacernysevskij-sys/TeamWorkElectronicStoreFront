@@ -24,7 +24,7 @@ const promoBanners = [
   {
     title: 'MORALE PATCHES',
     img: 'https://www.mtac.ua/storage/line-images/0943efd092be11ef8117aab9975c17d0/photo_2024-10-15_09-56-05.jpg',
-    to: '/sporyadzhennya-ta-ekipirovka',
+    to: '/sporyadzhennya-ta-ekipirovka?subtype=patches',
   },
 ];
 

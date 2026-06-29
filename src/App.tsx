@@ -7,18 +7,22 @@ import CategoryPage from './pages/CategoryPage/CategoryPage';
 import AdminPage from './pages/AdminPage/AdminPage';
 import AuthModal from './components/AuthModal/AuthModal';
 import CartPage from './pages/CartPage/CartPage';
+import FavoritesPage from './pages/FavoritePage/FavoritePage';
+import OrdersPage from './pages/OrdersPage/OrdersPage';
+import ComparePage from './pages/ComparePage/ComparePage';
+import SearchPage from './pages/SearchPage/SearchPage';
 import { useState } from 'react';
 
 function App() {
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
-  const [user, setUser] = useState<{ name: string; token: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; token: string; role?: string } | null>(null);
 
   const openLogin = () => { setAuthMode('login'); setAuthOpen(true); };
   const openRegister = () => { setAuthMode('register'); setAuthOpen(true); };
   const closeAuth = () => setAuthOpen(false);
 
-  const handleAuthSuccess = (userData: { name: string; token: string }) => {
+  const handleAuthSuccess = (userData: { name: string; token: string; role?: string }) => {
     setUser(userData);
     setAuthOpen(false);
     localStorage.setItem('token', userData.token);
@@ -50,6 +54,10 @@ function App() {
             <Route path="/novynky" element={<CategoryPage category="novynky" title="НОВИНКИ" />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/compare" element={<ComparePage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/search" element={<SearchPage />} />
           </Routes>
         </main>
         <Footer />

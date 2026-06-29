@@ -1,0 +1,113 @@
+.compare-page {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  min-height: 60vh;
+}
+
+.compare-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
+.compare-loading {
+  text-align: center;
+  padding: 60px;
+  color: #888;
+}
+
+.compare-empty {
+  text-align: center;
+  padding: 60px;
+  color: #888;
+  font-size: 14px;
+}
+
+.compare-empty a {
+  color: #f5c518;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.compare-clear-btn {
+  background: none;
+  border: 1px solid #e53935;
+  color: #e53935;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.compare-clear-btn:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+.compare-table-wrap {
+  overflow-x: auto;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.compare-table th {
+  padding: 12px;
+  border-bottom: 2px solid #eee;
+  font-weight: 600;
+  text-align: center;
+}
+
+.compare-table th:first-child {
+  text-align: left;
+  width: 200px;
+}
+
+.compare-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.compare-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+.compare-row-alt {
+  background: #fafafa;
+}
+
+.compare-remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #e53935;
+  font-size: 16px;
+}
+
+.compare-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.compare-price {
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .compare-title {
+    font-size: 22px;
+  }
+}

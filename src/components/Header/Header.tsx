@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BalanceIcon from '@mui/icons-material/Balance';
@@ -11,20 +11,21 @@ import './Header.css';
 interface HeaderProps {
   onLoginClick: () => void;
   onRegisterClick: () => void;
-  user: { name: string; token: string } | null;
+  user: { name: string; token: string; role?: string } | null;
   onLogout: () => void;
 }
 
 const Header = ({ onLoginClick, onRegisterClick, user, onLogout }: HeaderProps) => {
   const [searchVal, setSearchVal] = useState('');
   const [cartCount, setCartCount] = useState(0);
+  const [compareCount, setCompareCount] = useState(0);
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchVal.trim()) {
-      navigate(`${location.pathname}?q=${encodeURIComponent(searchVal)}`);
+        navigate(`/search?q=${encodeURIComponent(searchVal.trim())}`);
+        setSearchVal('');
     }
   };
 
@@ -40,10 +41,21 @@ const Header = ({ onLoginClick, onRegisterClick, user, onLogout }: HeaderProps) 
       .catch(() => {});
   };
 
+  const fetchCompareCount = () => {
+    const stored = localStorage.getItem('compare');
+    const list = stored ? JSON.parse(stored) : [];
+    setCompareCount(list.length);
+  };
+
   useEffect(() => {
     fetchCartCount();
+    fetchCompareCount();
     window.addEventListener('cartUpdated', fetchCartCount);
-    return () => window.removeEventListener('cartUpdated', fetchCartCount);
+    window.addEventListener('compareUpdated', fetchCompareCount);
+    return () => {
+      window.removeEventListener('cartUpdated', fetchCartCount);
+      window.removeEventListener('compareUpdated', fetchCompareCount);
+    };
   }, [user]);
 
   return (
@@ -62,6 +74,11 @@ const Header = ({ onLoginClick, onRegisterClick, user, onLogout }: HeaderProps) 
         <div className="topbar-auth">
           {user ? (
             <>
+              {user.role === 'admin' && (
+                <Link to="/admin" className="topbar-auth-btn" style={{ color: '#f5c518' }}>
+                  ⚙️ Адмін панель
+                </Link>
+              )}
               <span className="topbar-auth-btn" style={{ color: '#f5c518' }}>
                 <AccountCircleOutlinedIcon fontSize="small" />
                 {user.name}
@@ -107,12 +124,16 @@ const Header = ({ onLoginClick, onRegisterClick, user, onLogout }: HeaderProps) 
         </div>
 
         <div className="header-actions">
-          <button className="header-icon-btn">
+          <Link to="/favorites" className="header-icon-btn">
             <FavoriteBorderIcon />
-          </button>
-          <button className="header-icon-btn">
+          </Link>
+          <Link to="/orders" className="header-icon-btn" style={{ textDecoration: 'none', fontSize: '13px', fontWeight: 600, color: '#555' }}>
+            📋 Замовлення
+          </Link>
+          <Link to="/compare" className="header-icon-btn">
             <BalanceIcon />
-          </button>
+            {compareCount > 0 && <span className="cart-badge">{compareCount}</span>}
+          </Link>
           <Link to="/cart" className="header-icon-btn">
             <ShoppingCartOutlinedIcon />
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
@@ -126,7 +147,7 @@ const Header = ({ onLoginClick, onRegisterClick, user, onLogout }: HeaderProps) 
       <nav className="header-nav">
         <ul>
           <li><Link to="/novynky">НОВИНКИ</Link></li>
-          <li><Link to="/sporyadzhennya-ta-ekipirovka">СПОРЯДЖЕННЯ ТА ЕКІПРОВКА</Link></li>
+          <li><Link to="/sporyadzhennya-ta-ekipirovka">СПОРЯДЖЕННЯ ТА ЕКІПІРОВКА</Link></li>
           <li><Link to="/vzuttya">ВЗУТТЯ</Link></li>
           <li><Link to="/odyag">ОДЯГ</Link></li>
           <li><Link to="/taktychne">ТАКТИЧНЕ СПОРЯДЖЕННЯ</Link></li>
